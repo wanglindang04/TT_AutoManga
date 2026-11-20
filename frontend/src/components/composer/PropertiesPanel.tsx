@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState } from 'react';
 import { useComposerStore } from '../../store/composerStore';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -51,7 +52,7 @@ export function PropertiesPanel() {
   return (
     <div className="composer-properties">
       <div className="composer-properties-header">
-        {selectedElement ? `${t.composer.properties} — ${selectedElement.type}` : t.composer.properties}
+        {selectedElement ? `${t.composer.properties} — ${ui(selectedElement.type)}` : t.composer.properties}
       </div>
       <div className="composer-properties-body">
         {/* --- Page-wide controls (always visible) --- */}
@@ -90,7 +91,7 @@ export function PropertiesPanel() {
             <div className="composer-prop-group">
               <span className="composer-prop-label">{(selectedElement as ImageSlotElement).label}</span>
               <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-                Drag the central + to add an image. Drag corner handles to deform.
+                {ui("Drag the central + to add an image. Drag corner handles to deform.")}
               </p>
             </div>
           )}
@@ -148,13 +149,13 @@ function PageLevelControls({
       {/* --- Frame Border (page-wide) --- */}
       <div className="composer-prop-group composer-page-controls">
         <div className="composer-prop-label-row">
-          <span className="composer-prop-label">Frame Border</span>
+          <span className="composer-prop-label">{ui("Frame Border")}</span>
           <button
             className="composer-prop-mini-btn"
             onClick={() => handleBorderChange(1.5)}
             style={{ fontSize: 11 }}
           >
-            Default
+            {ui("Default")}
           </button>
         </div>
         <div className="composer-prop-row">
@@ -177,29 +178,27 @@ function PageLevelControls({
       {/* --- Snap to Edge (page-wide) --- */}
       <div className="composer-prop-group composer-page-controls">
         <div className="composer-prop-label-row">
-          <span className="composer-prop-label">Snap to Edge</span>
+          <span className="composer-prop-label">{ui("Snap to Edge")}</span>
         </div>
         <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
-          Snap frames near the page boundary so their edges become parallel to
-          the page edge with a uniform 2% margin.
+          {ui("Snap frames near the page boundary so their edges become parallel to the page edge with a uniform 2% margin.")}
         </p>
         <button
           className="composer-prop-apply-btn"
           onClick={onSnap}
           style={{ width: '100%' }}
         >
-          Snap to Edge
+          {ui("Snap to Edge")}
         </button>
       </div>
 
       {/* --- Auto Gap (page-wide) --- */}
       <div className="composer-prop-group composer-page-controls">
         <div className="composer-prop-label-row">
-          <span className="composer-prop-label">Auto Gap</span>
+          <span className="composer-prop-label">{ui("Auto Gap")}</span>
         </div>
         <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
-          Insert a uniform gap between touching frames. Frames stay in place; touching
-          edges shrink by the gap.
+          {ui("Insert a uniform gap between touching frames. Frames stay in place; touching edges shrink by the gap.")}
         </p>
         <div className="composer-prop-row">
           <input
@@ -218,9 +217,9 @@ function PageLevelControls({
           <button
             className="composer-prop-apply-btn"
             onClick={() => autoGap(gapPercent)}
-            style={{ width: '15%', padding: 0, fontSize: 11 }}
+            style={{ flexShrink: 0, padding: '4px 8px', fontSize: 11, whiteSpace: 'nowrap' }}
           >
-            Apply
+            {ui("Apply")}
           </button>
         </div>
       </div>
@@ -237,7 +236,7 @@ function PositionSizeProps({
 }) {
   return (
     <div className="composer-prop-group">
-      <span className="composer-prop-label">Position &amp; Size</span>
+      <span className="composer-prop-label">{ui("Position &amp; Size")}</span>
       <div className="composer-prop-row">
         <input
           className="composer-prop-input"
@@ -278,7 +277,7 @@ function PositionSizeProps({
           type="number"
           value={Math.round(element.rotation)}
           onChange={e => updateElement(element.id, { rotation: +e.target.value })}
-          placeholder="Rotation"
+          placeholder={ui("Rotation")}
           style={{ width: '50%' }}
         />
       </div>
@@ -318,19 +317,19 @@ function CornerProps({
   return (
     <div className="composer-prop-group">
       <div className="composer-prop-label-row">
-        <span className="composer-prop-label">Corners</span>
+        <span className="composer-prop-label">{ui("Corners")}</span>
         <button
           className="composer-prop-mini-btn"
           onClick={() => updateElement(element.id, { corners: { ...DEFAULT_CORNERS } })}
-          title="Reset to rectangle"
+          title={ui("Reset to rectangle")}
         >
-          Reset
+          {ui("Reset")}
         </button>
       </div>
       <div className="composer-corner-grid">
         {order.map(key => (
           <div key={key} className="composer-corner-row">
-            <span className="composer-corner-key">{labels[key]}</span>
+            <span className="composer-corner-key">{ui(labels[key])}</span>
             <input
               className="composer-prop-input"
               type="number"
@@ -370,7 +369,7 @@ function ImageProps({
     <>
     <div className="composer-prop-group">
       <div className="composer-prop-label-row">
-        <span className="composer-prop-label">Image</span>
+        <span className="composer-prop-label">{ui("Image")}</span>
       </div>
       <div className="composer-prop-row" style={{ marginBottom: 8 }}>
         <button
@@ -378,13 +377,13 @@ function ImageProps({
           style={{ gap: 4, fontSize: 12, padding: '4px 12px', width: '100%' }}
           onClick={() => openImagePicker({ kind: pickerKind, id: element.id })}
         >
-          <FiRefreshCw size={12} /> Replace Image
+          <FiRefreshCw size={12} /> {ui("Replace Image")}
         </button>
       </div>
     </div>
     <div className="composer-prop-group">
       <div className="composer-prop-label-row">
-        <span className="composer-prop-label">Image Offset</span>
+        <span className="composer-prop-label">{ui("Image Offset")}</span>
         {isOffset && (
           <button
             className="composer-prop-mini-btn"
@@ -395,7 +394,7 @@ function ImageProps({
               } as Partial<ImageElement>)
             }
           >
-            Reset
+            {ui("Reset")}
           </button>
         )}
       </div>
@@ -412,9 +411,9 @@ function ImageProps({
               imageOffsetX: Math.max(-100, Math.min(100, +e.target.value || 0)),
             } as Partial<ImageElement>)
           }
-          placeholder="Offset X (%)"
+          placeholder={ui("Offset X (%)")}
           style={{ width: '50%' }}
-          title="Horizontal image offset (% of frame width)"
+          title={ui("Horizontal image offset (% of frame width)")}
         />
         <input
           className="composer-prop-input"
@@ -428,14 +427,14 @@ function ImageProps({
               imageOffsetY: Math.max(-100, Math.min(100, +e.target.value || 0)),
             } as Partial<ImageElement>)
           }
-          placeholder="Offset Y (%)"
+          placeholder={ui("Offset Y (%)")}
           style={{ width: '50%' }}
-          title="Vertical image offset (% of frame height)"
+          title={ui("Vertical image offset (% of frame height)")}
         />
       </div>
 
       <div className="composer-prop-label-row" style={{ marginTop: 10 }}>
-        <span className="composer-prop-label">Image Scale</span>
+        <span className="composer-prop-label">{ui("Image Scale")}</span>
         {isScaled && (
           <button
             className="composer-prop-mini-btn"
@@ -445,7 +444,7 @@ function ImageProps({
               } as Partial<ImageElement>)
             }
           >
-            Reset
+            {ui("Reset")}
           </button>
         )}
       </div>
@@ -462,7 +461,7 @@ function ImageProps({
               imageScale: Math.max(0.1, Math.min(4, +e.target.value || 1)),
             } as Partial<ImageElement>)
           }
-          title="Scale image within the frame"
+          title={ui("Scale image within the frame")}
         />
         <input
           className="composer-prop-input"
@@ -481,8 +480,7 @@ function ImageProps({
       </div>
 
       <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>
-        Drag the image body inside the frame to reposition. Reshape the frame with its corner handles.
-        Use the scale slider to zoom the image within the frame.
+        {ui("Drag the image body inside the frame to reposition. Reshape the frame with its corner handles. Use the scale slider to zoom the image within the frame.")}
       </p>
     </div>
     </>
@@ -521,7 +519,7 @@ function BubbleProps({
               className={`composer-prop-btn ${element.bubbleType === bt ? 'active' : ''}`}
               onClick={() => updateElement(element.id, { bubbleType: bt })}
             >
-              {bt === 'inner-voice' ? t.composer.innerVoice : bt}
+              {bt === 'inner-voice' ? t.composer.innerVoice : t.composer[bt]}
             </button>
           ))}
         </div>
@@ -535,7 +533,7 @@ function BubbleProps({
               className={`composer-prop-btn ${element.tailPosition === tp ? 'active' : ''}`}
               onClick={() => updateElement(element.id, { tailPosition: tp })}
             >
-              {tp}
+              {ui(tp)}
             </button>
           ))}
         </div>
@@ -634,7 +632,7 @@ function TextProps({
               className={`composer-prop-btn ${element.fontWeight === w ? 'active' : ''}`}
               onClick={() => updateElement(element.id, { fontWeight: w })}
             >
-              {w}
+              {ui(w)}
             </button>
           ))}
         </div>

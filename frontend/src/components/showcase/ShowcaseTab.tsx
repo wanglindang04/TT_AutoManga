@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState, useEffect } from 'react';
 import { FiGrid, FiPlus, FiTrash2, FiFolder, FiEye, FiEdit2, FiChevronLeft, FiChevronRight, FiDownload } from 'react-icons/fi';
 import { useProjectStore } from '../../store/projectStore';
@@ -160,7 +161,7 @@ export function ShowcaseTab() {
   };
 
   const handleDeleteProject = async (projectId: string) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
+    if (!confirm(ui("Are you sure you want to delete this project?"))) return;
 
     try {
       await fetch(`/api/projects/delete/${projectId}`, { method: 'DELETE' });
@@ -177,12 +178,12 @@ export function ShowcaseTab() {
           <h3>
             {mode === 'browse' && t.showcase.title}
             {mode === 'viewing' && activeProject?.name}
-            {mode === 'editing' && (activeProject?.name + ' — Editing')}
+            {mode === 'editing' && (activeProject?.name + ui(" — Editing"))}
           </h3>
           <p className="text-sm text-secondary mt-sm">
             {mode === 'browse' && `${projects.length} comic${projects.length !== 1 ? 's' : ''}`}
-            {mode === 'viewing' && `Page ${readerPage + 1} of ${activeProject?.composerPages?.length || 0}`}
-            {mode === 'editing' && 'Editing in Composer'}
+            {mode === 'viewing' && ui('Page {page} of {total}', {page: readerPage + 1, total: activeProject?.composerPages?.length || 0})}
+            {mode === 'editing' && ui("Editing in Composer")}
           </p>
         </div>
         <div className="flex gap-sm">
@@ -191,7 +192,7 @@ export function ShowcaseTab() {
               className="btn btn-secondary"
               onClick={() => { setMode('browse'); setActiveProject(null); }}
             >
-              <FiFolder size={14} /> All Comics
+              <FiFolder size={14} /> {ui("All Comics")}
             </button>
           )}
           {mode === 'browse' && (
@@ -204,12 +205,12 @@ export function ShowcaseTab() {
                 checked={pageNumbers}
                 onChange={e => setPageNumbers(e.target.checked)}
               />
-              {t.showcase.pageNumbers || 'Page numbers'}
+              {t.showcase.pageNumbers || ui("Page numbers")}
             </label>
           )}
           {mode === 'browse' && (
             <button className="btn btn-secondary" onClick={() => setShowNewModal(true)}>
-              <FiPlus size={14} /> New Comic
+              <FiPlus size={14} /> {ui("New Comic")}
             </button>
           )}
         </div>
@@ -237,28 +238,28 @@ export function ShowcaseTab() {
               <div className="project-info">
                 <h4>{project.name}</h4>
                 <p className="text-sm text-muted">
-                  {project.composerPages?.length || 0} pages • {new Date(project.updatedAt).toLocaleDateString()}
+                  {project.composerPages?.length || 0} {ui("pages •")} {new Date(project.updatedAt).toLocaleDateString()}
                 </p>
               </div>
               <div className="project-card-actions">
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleLoadProject(project.id, 'view')}
-                  title="View"
+                  title={ui("View")}
                 >
                   <FiEye size={14} />
                 </button>
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleLoadProject(project.id, 'edit')}
-                  title="Edit"
+                  title={ui("Edit")}
                 >
                   <FiEdit2 size={14} />
                 </button>
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleExportProject(project.id)}
-                  title="Export PDF"
+                  title={ui("Export PDF")}
                   disabled={exportingId === project.id}
                 >
                   <FiDownload size={14} />
@@ -266,7 +267,7 @@ export function ShowcaseTab() {
                 <button
                   className="btn btn-ghost btn-sm"
                   onClick={() => handleDeleteProject(project.id)}
-                  title="Delete"
+                  title={ui("Delete")}
                 >
                   <FiTrash2 size={14} />
                 </button>
@@ -445,25 +446,25 @@ function ComicReader({ project, page, images, onPageChange, onBack, onEdit }: {
     <div className="comic-reader">
       {currentImage ? (
         <div className="comic-reader-page">
-          <img src={currentImage} alt={`Page ${page + 1}`} />
+          <img src={currentImage} alt={`${ui('Page')} ${page + 1}`} />
         </div>
       ) : (
         <div className="comic-reader-placeholder">
-          Loading page {page + 1}...
+          {ui("Loading page")} {page + 1}...
         </div>
       )}
       <div className="comic-reader-nav">
         <button className="btn btn-secondary" onClick={prev} disabled={page === 0}>
-          <FiChevronLeft size={16} /> Previous
+          <FiChevronLeft size={16} /> {ui("Previous")}
         </button>
         <span>{page + 1} / {total}</span>
         <button className="btn btn-secondary" onClick={next} disabled={page === total - 1}>
-          Next <FiChevronRight size={16} />
+          {ui("Next")} <FiChevronRight size={16} />
         </button>
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
-        <button className="btn btn-secondary" onClick={onBack}>Back</button>
-        <button className="btn btn-primary" onClick={onEdit}>Edit in Composer</button>
+        <button className="btn btn-secondary" onClick={onBack}>{ui("Back")}</button>
+        <button className="btn btn-primary" onClick={onEdit}>{ui("Edit in Composer")}</button>
       </div>
     </div>
   );

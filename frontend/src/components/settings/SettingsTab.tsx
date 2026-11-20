@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState, useEffect } from 'react';
 import { FiSave, FiRefreshCw, FiCheck, FiEye, FiEyeOff, FiX } from 'react-icons/fi';
 import { useProjectStore } from '../../store/projectStore';
@@ -42,7 +43,7 @@ export function SettingsTab() {
           promptSuffix: loadedSwarmui.promptSuffix || loadedSwarmui.promptSuffix || '',
         },
         defaults: data.defaults,
-        language: data.language || 'en',
+        language: data.language || 'vi',
       };
       setLocalSettings(loadedSettings);
       setSettings(loadedSettings);
@@ -76,7 +77,7 @@ export function SettingsTab() {
   };
 
   const handleReset = async () => {
-    if (!confirm('Reset all settings to defaults?')) return;
+    if (!confirm(ui("Reset all settings to defaults?"))) return;
     
     try {
       await fetch('/api/settings/reset', { method: 'POST' });
@@ -105,31 +106,31 @@ export function SettingsTab() {
     <div className="settings-tab">
       <div className="settings-header flex items-center justify-between mb-lg">
         <div>
-          <h3>Settings</h3>
+          <h3>{ui("Settings")}</h3>
           <p className="text-sm text-secondary mt-sm">
-            Configure API endpoints and application preferences
+            {ui("Configure API endpoints and application preferences")}
           </p>
         </div>
         <div className="flex gap-sm">
           <button className="btn btn-secondary" onClick={handleReset}>
-            <FiRefreshCw size={14} /> Reset to Defaults
+            <FiRefreshCw size={14} /> {ui("Reset to Defaults")}
           </button>
           <button className="btn btn-primary" onClick={handleSave} disabled={isSaving}>
             {saveSuccess ? <FiCheck size={14} /> : <FiSave size={14} />}
-            {saveSuccess ? 'Saved!' : 'Save Settings'}
+            {saveSuccess ? ui("Saved!") : ui("Save Settings")}
           </button>
         </div>
       </div>
 
       <div className="settings-sections">
         <div className="settings-section card">
-          <h4>OpenAI Compatible API</h4>
+          <h4>{ui("OpenAI Compatible API")}</h4>
           <p className="text-sm text-secondary mb-md">
-            Configure your AI API endpoint for storyboard and prompt generation
+            {ui("Configure your AI API endpoint for storyboard and prompt generation")}
           </p>
           
           <div className="form-group">
-            <label>API Endpoint</label>
+            <label>{ui("API Endpoint")}</label>
             <input
               className="input"
               type="text"
@@ -143,7 +144,7 @@ export function SettingsTab() {
           </div>
 
           <div className="form-group">
-            <label>API Key</label>
+            <label>{ui("API Key")}</label>
             <div className="input-with-icon">
               <input
                 className="input"
@@ -197,7 +198,7 @@ export function SettingsTab() {
             </div>
 
             <div className="form-group">
-              <label>Temperature</label>
+              <label>{ui("Temperature")}</label>
               <input
                 className="input"
                 type="number"
@@ -225,7 +226,7 @@ export function SettingsTab() {
             </div>
 
             <div className="form-group">
-              <label>Max Tokens</label>
+              <label>{ui("Max Tokens")}</label>
               <input
                 className="input"
                 type="number"
@@ -242,7 +243,7 @@ export function SettingsTab() {
           </div>
 
           <div className="form-group mt-md">
-            <label>Storyboard System Prompt (分镜生成)</label>
+            <label>{ui("Storyboard System Prompt (分镜生成)")}</label>
             <div className="flex gap-sm items-start">
               <select
                 className="input select"
@@ -258,7 +259,7 @@ export function SettingsTab() {
                   }
                 }}
               >
-                <option value="">— Select preset —</option>
+                <option value="">{ui("— Select preset —")}</option>
                 {(localSettings.api.storyboardPresets || []).map(p => (
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
@@ -267,7 +268,7 @@ export function SettingsTab() {
                 className="btn btn-secondary"
                 style={{ flexShrink: 0, padding: '6px 12px' }}
                 onClick={() => {
-                  const name = prompt('Preset name:');
+                  const name = prompt(ui("Preset name:"));
                   if (!name || !localSettings.api.storyboard_system_prompt.trim()) return;
                   const newPreset = { id: Date.now().toString(), name, content: localSettings.api.storyboard_system_prompt };
                   setLocalSettings({
@@ -276,7 +277,7 @@ export function SettingsTab() {
                   });
                 }}
               >
-                Save Current as Preset
+                {ui("Save Current as Preset")}
               </button>
               {(localSettings.api.storyboardPresets || []).length > 0 && (
                 <button
@@ -289,7 +290,7 @@ export function SettingsTab() {
                     }
                   }}
                 >
-                  Delete
+                  {ui("Delete")}
                 </button>
               )}
             </div>
@@ -300,13 +301,13 @@ export function SettingsTab() {
                 ...localSettings,
                 api: { ...localSettings.api, storyboard_system_prompt: e.target.value }
               })}
-              placeholder="System prompt for storyboard generation..."
+              placeholder={ui("System prompt for storyboard generation...")}
               rows={3}
             />
           </div>
 
           <div className="form-group">
-            <label>Prompt Enhancement System Prompt (提示词优化)</label>
+            <label>{ui("Prompt Enhancement System Prompt (提示词优化)")}</label>
             <div className="flex gap-sm items-start">
               <select
                 className="input select"
@@ -322,7 +323,7 @@ export function SettingsTab() {
                   }
                 }}
               >
-                <option value="">— Select preset —</option>
+                <option value="">{ui("— Select preset —")}</option>
                 {(localSettings.api.promptPresets || []).map(p => (
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
@@ -331,7 +332,7 @@ export function SettingsTab() {
                 className="btn btn-secondary"
                 style={{ flexShrink: 0, padding: '6px 12px' }}
                 onClick={() => {
-                  const name = prompt('Preset name:');
+                  const name = prompt(ui("Preset name:"));
                   if (!name || !localSettings.api.prompt_system_prompt.trim()) return;
                   const newPreset = { id: Date.now().toString(), name, content: localSettings.api.prompt_system_prompt };
                   setLocalSettings({
@@ -340,7 +341,7 @@ export function SettingsTab() {
                   });
                 }}
               >
-                Save Current as Preset
+                {ui("Save Current as Preset")}
               </button>
               {(localSettings.api.promptPresets || []).length > 0 && (
                 <button
@@ -353,7 +354,7 @@ export function SettingsTab() {
                     }
                   }}
                 >
-                  Delete
+                  {ui("Delete")}
                 </button>
               )}
             </div>
@@ -364,7 +365,7 @@ export function SettingsTab() {
                 ...localSettings,
                 api: { ...localSettings.api, prompt_system_prompt: e.target.value }
               })}
-              placeholder="System prompt for prompt enhancement..."
+              placeholder={ui("System prompt for prompt enhancement...")}
               rows={3}
             />
           </div>
@@ -397,9 +398,9 @@ export function SettingsTab() {
                 {isTestingSwarmUI ? (
                   <span className="loading-spinner" />
                 ) : swarmUIStatus === true ? (
-                  <><FiCheck size={14} /> {t.settings.connected || 'Connected'}</>
+                  <><FiCheck size={14} /> {t.settings.connected || ui("Connected")}</>
                 ) : swarmUIStatus === false ? (
-                  <><FiX size={14} /> {t.settings.failed || 'Failed'}</>
+                  <><FiX size={14} /> {t.settings.failed || ui("Failed")}</>
                 ) : (
                   t.settings.testConnection
                 )}
@@ -408,7 +409,7 @@ export function SettingsTab() {
           </div>
 
           <div className="form-group">
-            <label>Preset</label>
+            <label>{ui("Preset")}</label>
             <div className="flex gap-sm items-center">
               <select
                 className="input select"
@@ -443,7 +444,7 @@ export function SettingsTab() {
                   }
                 }}
               >
-                <option value="">Custom (no preset)</option>
+                <option value="">{ui("Custom (no preset)")}</option>
                 {(localSettings.swarmui.presets || []).map(preset => (
                   <option key={preset.id} value={preset.id}>{preset.name}</option>
                 ))}
@@ -451,7 +452,7 @@ export function SettingsTab() {
               <button
                 className="btn btn-secondary"
                 onClick={() => {
-                  const name = prompt('Preset name:');
+                  const name = prompt(ui("Preset name:"));
                   if (!name) return;
                   const newPreset = {
                     id: Date.now().toString(),
@@ -475,7 +476,7 @@ export function SettingsTab() {
                   });
                 }}
               >
-                Save Current as Preset
+                {ui("Save Current as Preset")}
               </button>
               {localSettings.swarmui.activePresetId && (
                 <button
@@ -491,7 +492,7 @@ export function SettingsTab() {
                     });
                   }}
                 >
-                  <FiX size={14} /> Delete
+                  <FiX size={14} /> {ui("Delete")}
                 </button>
               )}
             </div>
@@ -499,7 +500,7 @@ export function SettingsTab() {
 
           <div className="form-row">
             <div className="form-group">
-              <label>Model (SD Model)</label>
+              <label>{ui("Model (SD Model)")}</label>
               <input
                 className="input"
                 type="text"
@@ -512,7 +513,7 @@ export function SettingsTab() {
               />
             </div>
             <div className="form-group">
-              <label>Sampler</label>
+              <label>{ui("Sampler")}</label>
               <select
                 className="input select"
                 value={localSettings.swarmui.currentSamplerName}
@@ -533,7 +534,7 @@ export function SettingsTab() {
 
           <div className="form-row">
             <div className="form-group">
-              <label>Steps</label>
+              <label>{ui("Steps")}</label>
               <input
                 className="input"
                 type="number"
@@ -547,7 +548,7 @@ export function SettingsTab() {
               />
             </div>
             <div className="form-group">
-              <label>CFG Scale</label>
+              <label>{ui("CFG Scale")}</label>
               <input
                 className="input"
                 type="number"
@@ -564,7 +565,7 @@ export function SettingsTab() {
           </div>
 
           <div className="form-group">
-            <label>Aspect Ratio</label>
+            <label>{ui("Aspect Ratio")}</label>
             <div className="flex gap-sm flex-wrap">
               {[
                 { label: '1:1 (512)', w: 512, h: 512 },
@@ -591,7 +592,7 @@ export function SettingsTab() {
           </div>
 
           <div className="form-group">
-            <label>LoRA Models</label>
+            <label>{ui("LoRA Models")}</label>
             <div className="lora-list">
               {(localSettings.swarmui.currentLoras || []).map((lora, idx) => (
                 <div key={idx} className="lora-item flex items-center gap-sm mb-sm">
@@ -653,14 +654,14 @@ export function SettingsTab() {
                   });
                 }}
               >
-                + Add LoRA
+                {ui("+ Add LoRA")}
               </button>
             </div>
-            <span className="text-xs text-muted">Format: lora_name.safetensors, weight typically -2 to 2</span>
+            <span className="text-xs text-muted">{ui("Format: lora_name.safetensors, weight typically -2 to 2")}</span>
           </div>
 
           <div className="form-group mt-md">
-            <label>Prompt Suffix</label>
+            <label>{ui("Prompt Suffix")}</label>
             <textarea
               className="input textarea"
               rows={3}
@@ -672,20 +673,20 @@ export function SettingsTab() {
               placeholder="score_9, score_8_up, <lora:Anime_in_real:0.17>..."
             />
             <span className="text-xs text-muted">
-              {t.settings.promptSuffixHint || 'Automatically appended to all generation prompts. Good for quality tags, LoRA activations, and style keywords.'}
+              {t.settings.promptSuffixHint || ui("Automatically appended to all generation prompts. Good for quality tags, LoRA activations, and style keywords.")}
             </span>
           </div>
         </div>
 
         <div className="settings-section card">
-          <h4>Default Settings</h4>
+          <h4>{ui("Default Settings")}</h4>
           <p className="text-sm text-secondary mb-md">
-            Configure default values for new projects
+            {ui("Configure default values for new projects")}
           </p>
           
           <div className="form-row">
             <div className="form-group">
-              <label>Language / 语言</label>
+              <label>{ui("Language / 语言")}</label>
               <select
                 className="input select"
                 value={localSettings.language}
@@ -694,13 +695,14 @@ export function SettingsTab() {
                   language: e.target.value
                 })}
               >
+                <option value="vi">Tiếng Việt</option>
                 <option value="en">English</option>
                 <option value="zh">中文</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>Default Detail Level</label>
+              <label>{ui("Default Detail Level")}</label>
               <input
                 className="input"
                 type="number"
@@ -724,13 +726,13 @@ export function SettingsTab() {
                 })}
               />
               <div className="range-labels">
-                <span>Abstract</span>
-                <span>Detailed</span>
+                <span>{ui("Abstract")}</span>
+                <span>{ui("Detailed")}</span>
               </div>
             </div>
 
             <div className="form-group">
-              <label>Export Quality</label>
+              <label>{ui("Export Quality")}</label>
               <select
                 className="input select"
                 value={localSettings.defaults.exportQuality}
@@ -739,13 +741,13 @@ export function SettingsTab() {
                   defaults: { ...localSettings.defaults, exportQuality: e.target.value }
                 })}
               >
-                <option value="standard">Standard</option>
-                <option value="high">High</option>
+                <option value="standard">{ui("Standard")}</option>
+                <option value="high">{ui("High")}</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>Auto-save Interval (seconds)</label>
+              <label>{ui("Auto-save Interval (seconds)")}</label>
               <input
                 className="input"
                 type="number"

@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState, useEffect, useMemo } from 'react';
 import { FiUpload, FiRefreshCw, FiImage, FiCheck, FiX, FiAlertCircle, FiZap, FiTag, FiArchive, FiDownload, FiEdit2, FiLayers } from 'react-icons/fi';
 import { useProjectStore } from '../../store/projectStore';
@@ -90,7 +91,7 @@ function PanelSlot({ panelId, index, image, status, isGenerating, error, default
   return (
     <div className="panel-slot card">
       <div className="slot-header">
-        <span className="badge">Panel {index + 1}</span>
+        <span className="badge">{ui("Panel")} {index + 1}</span>
         <span className={`status-badge ${isGenerating ? 'pending' : status}`}>
           {isGenerating && <><span className="spinner-dot" /> {t.assets.generating}</>}
           {!isGenerating && status === 'empty' && t.assets.empty}
@@ -140,7 +141,7 @@ function PanelSlot({ panelId, index, image, status, isGenerating, error, default
           <button
             className="btn btn-secondary"
             onClick={() => onArchive(panelId)}
-            title="Archive image"
+            title={ui("Archive image")}
           >
             <FiArchive size={14} />
           </button>
@@ -185,7 +186,7 @@ function ArchiveItem({ img, isSelected, isMoveMenuOpen, folders, onSelect, onDel
         className="btn btn-ghost archive-item-delete"
         onClick={(e) => { e.stopPropagation(); onDelete(img.id); }}
       >
-        Delete
+        {ui("Delete")}
       </button>
       <div className="archive-item-move-wrapper">
         <button
@@ -214,7 +215,7 @@ function ArchiveItem({ img, isSelected, isMoveMenuOpen, folders, onSelect, onDel
               </button>
             ))}
             {folders.length === 0 && (
-              <div className="archive-move-empty">No folders yet</div>
+              <div className="archive-move-empty">{ui("No folders yet")}</div>
             )}
           </div>
         )}
@@ -302,7 +303,7 @@ export function AssetTab() {
   };
 
   const deleteArchiveImage = async (imageId: string) => {
-    if (!confirm('Delete this image from archive?')) return;
+    if (!confirm(ui("Delete this image from archive?"))) return;
     try {
       await fetch(`/api/archive/images/${imageId}`, { method: 'DELETE' });
       loadArchive();
@@ -326,7 +327,7 @@ export function AssetTab() {
   };
 
   const createFolder = async () => {
-    const name = prompt('Folder name:');
+    const name = prompt(ui("Folder name:"));
     if (!name) return;
     try {
       await fetch('/api/archive/folders', {
@@ -347,7 +348,7 @@ export function AssetTab() {
   };
 
   const deleteFolder = async (folderId: string) => {
-    if (!confirm('Delete this folder and all images in it?')) return;
+    if (!confirm(ui("Delete this folder and all images in it?"))) return;
     try {
       await fetch(`/api/archive/folders/${folderId}`, { method: 'DELETE' });
       if (currentFolder === folderId) setCurrentFolder(null);
@@ -438,7 +439,7 @@ export function AssetTab() {
         setPanelStatuses(prev => ({ ...prev, [panelId]: 'ready' }));
       } else {
         setPanelStatuses(prev => ({ ...prev, [panelId]: 'error' }));
-        setPanelErrors(prev => ({ ...prev, [panelId]: data.error || 'Generation failed' }));
+        setPanelErrors(prev => ({ ...prev, [panelId]: data.error || ui("Generation failed") }));
       }
     } catch (error) {
       console.error('Generation failed:', error);
@@ -480,14 +481,14 @@ export function AssetTab() {
               onClick={() => setViewMode('generated')}
               style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', background: viewMode === 'generated' ? 'var(--accent-primary)' : 'transparent', color: viewMode === 'generated' ? 'white' : 'var(--text-secondary)', cursor: 'pointer', fontSize: '13px' }}
             >
-              Generated
+              {ui("Generated")}
             </button>
             <button
               className={`view-btn ${viewMode === 'archive' ? 'active' : ''}`}
               onClick={() => setViewMode('archive')}
               style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', background: viewMode === 'archive' ? 'var(--accent-primary)' : 'transparent', color: viewMode === 'archive' ? 'white' : 'var(--text-secondary)', cursor: 'pointer', fontSize: '13px' }}
             >
-              Archive
+              {ui("Archive")}
             </button>
           </div>
         </div>
@@ -500,12 +501,12 @@ export function AssetTab() {
               style={{ whiteSpace: 'nowrap' }}
             >
               {generatingPanels.length > 0 ? <span className="loading-spinner" /> : <FiRefreshCw size={14} />}
-              {t.assets.generateAll || 'Generate All'}
+              {t.assets.generateAll || ui("Generate All")}
             </button>
           )}
           <span className={`connection-status ${swarmUIConnected ? 'connected' : 'disconnected'}`}>
             <span className="status-dot" />
-            SwarmUI: {swarmUIConnected === null ? t.assets.checking : swarmUIConnected ? t.assets.connected : t.assets.disconnected}
+            {ui("SwarmUI:")} {swarmUIConnected === null ? t.assets.checking : swarmUIConnected ? t.assets.connected : t.assets.disconnected}
           </span>
         </div>
       </div>
@@ -514,18 +515,18 @@ export function AssetTab() {
         <div className="archive-view" style={{ display: 'flex', gap: '16px', height: 'calc(100vh - 200px)' }}>
           <div className="archive-sidebar" style={{ width: '320px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '0' }}>
             <div className="folder-header flex justify-between items-center mb-sm">
-              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Groups</span>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>{ui("Groups")}</span>
               <div style={{ display: 'flex', gap: '4px' }}>
                 <select
                   value={folderSortBy}
                   onChange={(e) => { const v = e.target.value as 'order' | 'name' | 'created'; setFolderSortBy(v); loadArchive(); }}
                   style={{ fontSize: '10px', padding: '2px 4px', borderRadius: '4px', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', border: '1px solid var(--border-default)' }}
                 >
-                  <option value="order">Default</option>
-                  <option value="name">Name</option>
-                  <option value="created">Date</option>
+                  <option value="order">{ui("Default")}</option>
+                  <option value="name">{ui("Name")}</option>
+                  <option value="created">{ui("Date")}</option>
                 </select>
-                <button className="btn btn-ghost" style={{ padding: '2px 6px', fontSize: '11px' }} onClick={createFolder}>+ New</button>
+                <button className="btn btn-ghost" style={{ padding: '2px 6px', fontSize: '11px' }} onClick={createFolder}>{ui("+ New")}</button>
               </div>
             </div>
             <div style={{ flex: 1, overflow: 'auto' }}>
@@ -534,7 +535,7 @@ export function AssetTab() {
                 style={{ padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', background: activeGroup === null ? 'var(--accent-primary)' : 'transparent', color: activeGroup === null ? 'white' : 'inherit', fontSize: '12px', fontWeight: 600 }}
                 onClick={() => { setActiveGroup(null); setCurrentFolder(null); }}
               >
-                All Folders
+                {ui("All Folders")}
               </div>
               {(() => {
                 const groups: Record<string, typeof archiveFolders> = {};
@@ -556,7 +557,7 @@ export function AssetTab() {
                       style={{ padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', background: activeGroup === groupName ? '#5b8def' : 'var(--bg-tertiary)', color: activeGroup === groupName ? 'white' : 'var(--text-secondary)', fontSize: '11px', fontWeight: 500, marginBottom: '2px' }}
                       onClick={() => { setActiveGroup(groupName); setCurrentFolder(null); }}
                     >
-                      {groupName === '__ungrouped__' ? 'Ungrouped' : groupName} ({folders.length})
+                      {groupName === '__ungrouped__' ? ui("Ungrouped") : groupName} ({folders.length})
                     </div>
                     {activeGroup === groupName && folders.map(folder => (
                       <div
@@ -576,10 +577,10 @@ export function AssetTab() {
                         <div className="flex justify-between items-center" style={{ padding: '6px 10px', width: '100%' }}>
                           <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, fontSize: '12px' }}>{folder.name}</span>
                           <div style={{ display: 'flex', gap: '1px', alignItems: 'center', flexShrink: 0, marginLeft: '8px' }} onClick={e => e.stopPropagation()}>
-                            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.6, padding: '3px', borderRadius: '3px', display: 'flex', alignItems: 'center' }} onClick={() => { const newName = prompt('Rename folder:', folder.name); if (newName) { fetch(`/api/archive/folders/${folder.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: newName }) }).then(() => loadArchive()); } }} title="Rename"><FiEdit2 size={11} /></button>
-                            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.6, padding: '3px', borderRadius: '3px', display: 'flex', alignItems: 'center' }} onClick={() => { const g = prompt('Group name:', folder.group || ''); fetch(`/api/archive/folders/${folder.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ group: g || null }) }).then(() => loadArchive()); }} title="Group"><FiLayers size={11} /></button>
-                            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.6, padding: '3px', borderRadius: '3px', display: 'flex', alignItems: 'center' }} onClick={() => downloadFolder(folder.id)} title={t.assets.downloadFolder || 'Download'}><FiDownload size={11} /></button>
-                            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.6, padding: '3px', borderRadius: '3px', display: 'flex', alignItems: 'center' }} onClick={() => deleteFolder(folder.id)} title="Delete">×</button>
+                            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.6, padding: '3px', borderRadius: '3px', display: 'flex', alignItems: 'center' }} onClick={() => { const newName = prompt(ui("Rename folder:"), folder.name); if (newName) { fetch(`/api/archive/folders/${folder.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: newName }) }).then(() => loadArchive()); } }} title={ui("Rename")}><FiEdit2 size={11} /></button>
+                            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.6, padding: '3px', borderRadius: '3px', display: 'flex', alignItems: 'center' }} onClick={() => { const g = prompt(ui("Group name:"), folder.group || ''); fetch(`/api/archive/folders/${folder.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ group: g || null }) }).then(() => loadArchive()); }} title={ui("Group")}><FiLayers size={11} /></button>
+                            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.6, padding: '3px', borderRadius: '3px', display: 'flex', alignItems: 'center' }} onClick={() => downloadFolder(folder.id)} title={t.assets.downloadFolder || ui("Download")}><FiDownload size={11} /></button>
+                            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.6, padding: '3px', borderRadius: '3px', display: 'flex', alignItems: 'center' }} onClick={() => deleteFolder(folder.id)} title={ui("Delete")}>×</button>
                           </div>
                         </div>
                       </div>
@@ -593,8 +594,8 @@ export function AssetTab() {
             {archiveImages.length === 0 ? (
               <div className="empty-state">
                 <FiImage size={48} />
-                <h3>No archived images</h3>
-                <p>Generated images can be archived for later use</p>
+                <h3>{ui("No archived images")}</h3>
+                <p>{ui("Generated images can be archived for later use")}</p>
               </div>
             ) : (
               <div className="archive-grid">

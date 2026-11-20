@@ -67,7 +67,7 @@ const defaultSettings: AppSettings = {
     autoSaveInterval: 60,
     exportQuality: 'high',
   },
-  language: 'en',
+  language: 'vi',
 };
 
 export const useProjectStore = create<ProjectStore>()(

@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useComposerStore } from '../../store/composerStore';
@@ -366,7 +367,7 @@ export function Canvas() {
     return (
       <div className="composer-canvas-scroll">
         <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 'var(--space-xxl)', fontSize: 13 }}>
-          Add a page to start composing.
+          {ui("Add a page to start composing.")}
         </div>
       </div>
     );
@@ -542,7 +543,7 @@ function ElementRenderer({
               {textEl.content}
             </div>
           ) : (
-            textEl.content || <span style={{ color: 'var(--text-muted)' }}>{textEl.content || 'Text'}</span>
+            textEl.content || <span style={{ color: 'var(--text-muted)' }}>{textEl.content || ui("Text")}</span>
           )}
           {isSelected && !el.locked && !isEditing && <ResizeHandles id={el.id} onResizeDown={onResizeDown} />}
         </div>
@@ -730,7 +731,7 @@ function FrameElement({
             e.stopPropagation();
             onAddImageClick(el.id, isSlot ? 'slot' : 'pageImage');
           }}
-          title="Add image"
+          title={ui("Add image")}
         >
           <FiPlus size={18} />
         </button>

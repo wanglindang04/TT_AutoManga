@@ -1,3 +1,4 @@
+import { ui } from '../i18n/ui';
 import { create } from 'zustand';
 import type {
   ComposerPage,
@@ -377,7 +378,7 @@ export const useComposerStore = create<ComposerStore>()((set, get) => ({
     const template = TEMPLATES.find(t => t.id === templateId) || TEMPLATES[0];
     const newPage: ComposerPage = {
       id: pageUid(),
-      name: `Page ${get().pages.length + 1}`,
+      name: `${ui('Page')} ${get().pages.length + 1}`,
       templateId,
       width: template.width,
       height: template.height,
@@ -413,7 +414,7 @@ export const useComposerStore = create<ComposerStore>()((set, get) => ({
     const newPage: ComposerPage = {
       ...JSON.parse(JSON.stringify(source)),
       id: pageUid(),
-      name: `${source.name} copy`,
+      name: `${source.name} ${ui('copy')}`,
       order: pages.length,
     };
     newPage.elements = newPage.elements.map(el => ({ ...el, id: uid() }));
@@ -562,7 +563,7 @@ export const useComposerStore = create<ComposerStore>()((set, get) => ({
       zIndex: page.elements.length,
       locked: false,
       visible: true,
-      label: `Frame ${page.elements.length + 1}`,
+      label: `${ui('Frame')} ${page.elements.length + 1}`,
     };
     set(state => {
       const pageIdx = state.pages.findIndex(p => p.id === state.currentPageId);
@@ -594,7 +595,7 @@ export const useComposerStore = create<ComposerStore>()((set, get) => ({
       zIndex: el.zIndex,
       locked: false,
       visible: true,
-      label: `${el.label || 'Frame'}${suffix}`,
+      label: `${el.label || ui('Frame')}${suffix}`,
     });
     let pair: [{ x: number; y: number; width: number; height: number },
                { x: number; y: number; width: number; height: number }];
@@ -642,10 +643,10 @@ export const useComposerStore = create<ComposerStore>()((set, get) => ({
       label,
     });
     const pair = axis === 'x'
-      ? [mk({ x: lo, y: lo, width: cutPct - g - lo, height: hi - lo }, 'Frame 1'),
-         mk({ x: cutPct + g, y: lo, width: hi - (cutPct + g), height: hi - lo }, 'Frame 2')]
-      : [mk({ x: lo, y: lo, width: hi - lo, height: cutPct - g - lo }, 'Frame 1'),
-         mk({ x: lo, y: cutPct + g, width: hi - lo, height: hi - (cutPct + g) }, 'Frame 2')];
+      ? [mk({ x: lo, y: lo, width: cutPct - g - lo, height: hi - lo }, `${ui('Frame')} 1`),
+         mk({ x: cutPct + g, y: lo, width: hi - (cutPct + g), height: hi - lo }, `${ui('Frame')} 2`)]
+      : [mk({ x: lo, y: lo, width: hi - lo, height: cutPct - g - lo }, `${ui('Frame')} 1`),
+         mk({ x: lo, y: cutPct + g, width: hi - lo, height: hi - (cutPct + g) }, `${ui('Frame')} 2`)];
     set(state => {
       const pageIdx = state.pages.findIndex(p => p.id === state.currentPageId);
       if (pageIdx === -1) return state;

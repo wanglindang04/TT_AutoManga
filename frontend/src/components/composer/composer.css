@@ -141,17 +141,21 @@
 
 .composer-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-xs);
   padding: var(--space-xs) var(--space-md);
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-default);
   flex-shrink: 0;
-  height: 44px;
+  min-height: 44px;
 }
 
 .composer-toolbar-group {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 100%;
   gap: 2px;
   padding: 0 var(--space-xs);
 }
@@ -163,6 +167,7 @@
 
 .composer-tool-btn {
   width: 30px;
+  flex-shrink: 0;
   height: 30px;
   display: flex;
   align-items: center;

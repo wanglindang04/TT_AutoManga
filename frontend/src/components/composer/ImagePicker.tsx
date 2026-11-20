@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState, useEffect, useMemo } from 'react';
 import { FiX, FiImage, FiUpload, FiFolder } from 'react-icons/fi';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -103,7 +104,7 @@ export function ImagePicker({ onSelect, onClose }: ImagePickerProps) {
     if (archiveLoading || panelsLoading) {
       return (
         <div className="composer-image-picker-empty">
-          <span>Loading...</span>
+          <span>{ui("Loading...")}</span>
         </div>
       );
     }
@@ -132,7 +133,7 @@ export function ImagePicker({ onSelect, onClose }: ImagePickerProps) {
               key={img.id}
               className="composer-image-picker-item"
               onClick={() => onSelect(src)}
-              title={name || 'Image'}
+              title={name || ui("Image")}
             >
               <img src={src} alt={name || ''} />
             </div>
@@ -148,7 +149,7 @@ export function ImagePicker({ onSelect, onClose }: ImagePickerProps) {
         {/* Header */}
         <div className="composer-image-picker-header">
           <h3>{t.composer.selectImage}</h3>
-          <button className="composer-tool-btn" onClick={onClose} title="Close">
+          <button className="composer-tool-btn" onClick={onClose} title={ui("Close")}>
             <FiX size={16} />
           </button>
         </div>
@@ -159,13 +160,13 @@ export function ImagePicker({ onSelect, onClose }: ImagePickerProps) {
             className={`composer-source-tab ${source === 'panels' ? 'active' : ''}`}
             onClick={() => setSource('panels')}
           >
-            {t.composer.fromPanels || 'Panels'}
+            {t.composer.fromPanels || ui("Panels")}
           </button>
           <button
             className={`composer-source-tab ${source === 'archive' ? 'active' : ''}`}
             onClick={() => setSource('archive')}
           >
-            {t.composer.fromArchive || 'Archive'}
+            {t.composer.fromArchive || ui("Archive")}
           </button>
         </div>
 
@@ -178,7 +179,7 @@ export function ImagePicker({ onSelect, onClose }: ImagePickerProps) {
               value={archiveFolder ?? ''}
               onChange={e => setArchiveFolder(e.target.value || null)}
             >
-              <option value="">{t.composer.allImages || 'All Images'}</option>
+              <option value="">{t.composer.allImages || ui("All Images")}</option>
               {archiveFolders.map(f => (
                 <option key={f.id} value={f.id}>
                   {f.name}

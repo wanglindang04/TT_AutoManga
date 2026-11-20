@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState } from 'react';
 import { FiPlus, FiTrash2, FiMove, FiEdit2, FiCheck, FiX, FiFileText } from 'react-icons/fi';
 import { 
@@ -58,7 +59,7 @@ function SortablePanel({ panel, index, onUpdate, onDelete }: {
           <span {...attributes} {...listeners} className="drag-handle">
             <FiMove size={14} />
           </span>
-          <span className="badge">Panel {index + 1}</span>
+          <span className="badge">{ui("Panel")} {index + 1}</span>
         </div>
         <button className="btn btn-ghost" onClick={() => onDelete(panel.id)}>
           <FiTrash2 size={16} />
@@ -71,33 +72,33 @@ function SortablePanel({ panel, index, onUpdate, onDelete }: {
             className="input textarea"
             value={editScene}
             onChange={(e) => setEditScene(e.target.value)}
-            placeholder="Scene description..."
+            placeholder={ui("Scene description...")}
             rows={3}
           />
           <textarea
             className="input textarea"
             value={editDialogue}
             onChange={(e) => setEditDialogue(e.target.value)}
-            placeholder="Dialogue..."
+            placeholder={ui("Dialogue...")}
             rows={2}
           />
           <div className="flex gap-sm mt-sm">
             <button className="btn btn-primary" onClick={handleSave}>
-              <FiCheck size={14} /> Save
+              <FiCheck size={14} /> {ui("Save")}
             </button>
             <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>
-              <FiX size={14} /> Cancel
+              <FiX size={14} /> {ui("Cancel")}
             </button>
           </div>
         </div>
       ) : (
         <div className="panel-content">
           <div className="scene-text">
-            <strong>Scene:</strong> {panel.scene || 'No description'}
+            <strong>{ui("Scene:")}</strong> {panel.scene || ui("No description")}
           </div>
           {panel.dialogue && (
             <div className="dialogue-text">
-              <strong>Dialogue:</strong> {panel.dialogue}
+              <strong>{ui("Dialogue:")}</strong> {panel.dialogue}
             </div>
           )}
           {panel.characters.length > 0 && (
@@ -108,7 +109,7 @@ function SortablePanel({ panel, index, onUpdate, onDelete }: {
             </div>
           )}
           <button className="btn btn-ghost mt-sm" onClick={() => setIsEditing(true)}>
-            <FiEdit2 size={14} /> Edit
+            <FiEdit2 size={14} /> {ui("Edit")}
           </button>
         </div>
       )}
@@ -150,10 +151,10 @@ export function StoryboardTab() {
       });
       
       const data = await response.json();
-      console.log('API Response:', data);
+      console.log(ui("API Response:"), data);
       
       if (data.error) {
-        alert('Error: ' + data.error);
+        alert(ui("Error: ") + data.error);
       }
       
       if (data.panels && data.panels.length > 0) {
@@ -168,11 +169,11 @@ export function StoryboardTab() {
         }));
         setPanels(newPanels);
       } else {
-        alert('No panels returned. Check console for details.');
+        alert(ui("No panels returned. Check console for details."));
       }
     } catch (error) {
       console.error('Generation failed:', error);
-      alert('Request failed: ' + error);
+      alert(ui("Request failed: ") + error);
     } finally {
       setIsGenerating(false);
     }
@@ -231,7 +232,7 @@ export function StoryboardTab() {
               </div>
             </div>
             <div className="panel-count-hint text-sm text-muted">
-              {detailLevel === 1 ? '~1-2' : detailLevel === 2 ? '~3-4' : detailLevel === 3 ? '~5-6' : detailLevel === 4 ? '~7-8' : '~10+'} panels
+              {detailLevel === 1 ? '~1-2' : detailLevel === 2 ? '~3-4' : detailLevel === 3 ? '~5-6' : detailLevel === 4 ? '~7-8' : '~10+'} {ui("panels")}
             </div>
           </div>
           <button 
@@ -246,7 +247,7 @@ export function StoryboardTab() {
 
       <div className="panels-section mt-lg">
         <div className="flex items-center justify-between mb-md">
-          <h3>Storyboard Panels ({panels.length})</h3>
+          <h3>{ui("Storyboard Panels (")}{panels.length})</h3>
           <button className="btn btn-secondary" onClick={handleAddPanel}>
             <FiPlus size={16} /> {t.storyboard.addPanel}
           </button>

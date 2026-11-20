@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState, useEffect } from 'react';
 import { FiUser, FiPlus, FiEdit2, FiTrash2, FiImage, FiCopy, FiUpload } from 'react-icons/fi';
 import { useProjectStore } from '../../store/projectStore';
@@ -100,7 +101,7 @@ export function CharacterTab() {
   };
 
   const handleDelete = (id: string) => {
-    if (!confirm('Delete this character?')) return;
+    if (!confirm(ui("Delete this character?"))) return;
     removeCharacter(id);
     if (selectedCharId === id) setSelectedCharId(null);
   };
@@ -178,7 +179,7 @@ export function CharacterTab() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(template),
     });
-    alert('Saved as template!');
+    alert(ui("Saved as template!"));
   };
 
   return (
@@ -379,7 +380,7 @@ export function CharacterTab() {
                   )}
 
                   {!selectedChar.description && !selectedChar.appearance && (
-                    <p style={{ color: 'var(--text-muted)', fontSize: '13px', fontStyle: 'italic' }}>No description or appearance details yet.</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '13px', fontStyle: 'italic' }}>{ui("No description or appearance details yet.")}</p>
                   )}
                 </div>
               </div>
@@ -389,7 +390,7 @@ export function CharacterTab() {
           <div className="empty-state" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ textAlign: 'center' }}>
               <FiUser size={64} style={{ opacity: 0.2 }} />
-              <p style={{ marginTop: '16px' }}>Select a character to view details</p>
+              <p style={{ marginTop: '16px' }}>{ui("Select a character to view details")}</p>
             </div>
           </div>
         )}

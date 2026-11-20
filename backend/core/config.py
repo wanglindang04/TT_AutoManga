@@ -77,7 +77,7 @@ class AppSettings(BaseModel):
     api: APIConfig = APIConfig()
     swarmui: SwarmUIConfig = SwarmUIConfig()
     defaults: DefaultSettings = DefaultSettings()
-    language: str = "en"
+    language: str = "vi"
 
 
 def mask_api_key(key: str) -> str:

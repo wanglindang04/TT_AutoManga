@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState, useEffect, useRef } from 'react';
 import { FiRefreshCw, FiCopy, FiCheck, FiZap, FiTag, FiShuffle, FiUpload } from 'react-icons/fi';
 import { useProjectStore } from '../../store/projectStore';
@@ -74,9 +75,9 @@ export function PromptLabTab() {
     let data: ImportedPrompt[];
     try {
       data = JSON.parse(importJson) as ImportedPrompt[];
-      if (!Array.isArray(data)) throw new Error('Expected an array');
+      if (!Array.isArray(data)) throw new Error(ui("Expected an array"));
     } catch {
-      setImportError('Invalid JSON. Please check format.');
+      setImportError(ui("Invalid JSON. Please check format."));
       return;
     }
     let imported = 0;
@@ -148,12 +149,12 @@ export function PromptLabTab() {
 
       if (!response.ok) {
         const detail = data?.detail || `HTTP ${response.status}`;
-        setErrorMessage(`后端错误 (${response.status}): ${detail}`);
+        setErrorMessage(ui('Server error ({status}): {detail}', {status: response.status, detail: String(detail)}));
         return;
       }
 
       if (data?.error) {
-        setErrorMessage(`LLM 调用失败: ${data.error}`);
+        setErrorMessage(ui('LLM request failed: {detail}', {detail: data.error}));
         return;
       }
 
@@ -167,11 +168,11 @@ export function PromptLabTab() {
           updatePanelPrompt(selectedPanelId, { tags });
         }
       } else {
-        setErrorMessage('后端返回了空结果,请检查后端日志。');
+        setErrorMessage(ui("后端返回了空结果,请检查后端日志。"));
       }
     } catch (error) {
       console.error('Enhancement failed:', error);
-      setErrorMessage(`网络/客户端错误: ${toErrorMessage(error)}`);
+      setErrorMessage(ui('Network/client error: {detail}', {detail: toErrorMessage(error)}));
     } finally {
       stopTimer();
       setIsGenerating(false);
@@ -207,7 +208,7 @@ export function PromptLabTab() {
 
       if (!response.ok) {
         const detail = data?.detail || `HTTP ${response.status}`;
-        setErrorMessage(`后端错误 (${response.status}): ${detail}`);
+        setErrorMessage(ui('Server error ({status}): {detail}', {status: response.status, detail: String(detail)}));
         return;
       }
 
@@ -229,16 +230,16 @@ export function PromptLabTab() {
           }
         });
         if (failed > 0 && success === 0) {
-          setErrorMessage(`全部 ${failed} 个分镜生成失败,请查看后端日志。`);
+          setErrorMessage(ui('All {n} panels failed. Check server logs.', {n: failed}));
         } else if (failed > 0) {
-          setErrorMessage(`部分失败: ${success} 个成功, ${failed} 个失败。`);
+          setErrorMessage(ui('Partial failure: {success} succeeded, {failed} failed.', {success, failed}));
         }
       } else {
-        setErrorMessage('后端返回了空结果,请检查后端日志。');
+        setErrorMessage(ui("后端返回了空结果,请检查后端日志。"));
       }
     } catch (error) {
       console.error('Batch enhancement failed:', error);
-      setErrorMessage(`网络/客户端错误: ${toErrorMessage(error)}`);
+      setErrorMessage(ui('Network/client error: {detail}', {detail: toErrorMessage(error)}));
     } finally {
       stopTimer();
       setIsGenerating(false);
@@ -284,7 +285,7 @@ export function PromptLabTab() {
             <FiRefreshCw size={16} /> {t.prompt.generateAll}
             {isGenerating && (
               <span style={{ marginLeft: 8, fontSize: 12, opacity: 0.8 }}>
-                生成中… {generatingSeconds}s
+                {ui("生成中…")} {generatingSeconds}s
               </span>
             )}
           </button>
@@ -299,7 +300,7 @@ export function PromptLabTab() {
             <option value="">{t.prompt.selectPanel}</option>
             {panels.map((panel, idx) => (
               <option key={panel.id} value={panel.id}>
-                Panel {idx + 1}: {panel.scene.substring(0, 30)}...
+                {ui("Panel")} {idx + 1}: {panel.scene.substring(0, 30)}...
               </option>
             ))}
           </select>
@@ -339,7 +340,7 @@ export function PromptLabTab() {
               onClick={() => setErrorMessage('')}
               style={{ fontSize: 12, padding: '2px 8px' }}
             >
-              关闭
+              {ui("关闭")}
             </button>
           </div>
         )}
@@ -350,8 +351,8 @@ export function PromptLabTab() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder={promptMode === 'turbo'
-              ? 'Enter scene description for enhancement...'
-              : 'Enter tags separated by commas...'}
+              ? ui("Enter scene description for enhancement...")
+              : ui("Enter tags separated by commas...")}
             rows={10}
           />
           <button
@@ -362,7 +363,7 @@ export function PromptLabTab() {
             {isGenerating ? <span className="loading-spinner" /> : t.prompt.generate}
             {isGenerating && (
               <span style={{ marginLeft: 8, fontSize: 12, opacity: 0.8 }}>
-                生成中… {generatingSeconds}s
+                {ui("生成中…")} {generatingSeconds}s
               </span>
             )}
           </button>
@@ -375,7 +376,7 @@ export function PromptLabTab() {
               className="input textarea output-textarea"
               value={outputText}
               onChange={(e) => setOutputText(e.target.value)}
-              placeholder="Enhanced prompt will appear here..."
+              placeholder={ui("Enhanced prompt will appear here...")}
               rows={8}
             />
           </div>
@@ -392,19 +393,19 @@ export function PromptLabTab() {
           </div>
 
           <div className="prompt-seed-section">
-            <h3>{t.prompt.seed || 'Seed'}</h3>
+            <h3>{t.prompt.seed || ui("Seed")}</h3>
             <div className="seed-input-row">
               <input
                 type="number"
                 className="input"
                 value={seed}
                 onChange={(e) => setSeed(e.target.value)}
-                placeholder={t.prompt.seedPlaceholder || 'Random'}
+                placeholder={t.prompt.seedPlaceholder || ui("Random")}
               />
               <button
                 className="btn btn-secondary"
                 onClick={() => setSeed(String(Math.floor(Math.random() * 2147483647)))}
-                title="Random seed"
+                title={ui("Random seed")}
               >
                 <FiShuffle size={16} />
               </button>
@@ -416,9 +417,9 @@ export function PromptLabTab() {
                   checked={removeBG}
                   onChange={(e) => setRemoveBG(e.target.checked)}
                 />
-                <span>{t.prompt.removeBG || 'Remove Background'}</span>
+                <span>{t.prompt.removeBG || ui("Remove Background")}</span>
               </label>
-              <span className="text-xs text-muted">{t.prompt.removeBGHint || 'Generate image without background (transparent PNG)'}</span>
+              <span className="text-xs text-muted">{t.prompt.removeBGHint || ui("Generate image without background (transparent PNG)")}</span>
             </div>
             <div className="flex gap-sm mt-md">
               <button
@@ -442,7 +443,7 @@ export function PromptLabTab() {
                 }}
                 disabled={!outputText}
               >
-                Save
+                {ui("Save")}
               </button>
             </div>
           </div>
@@ -455,7 +456,7 @@ export function PromptLabTab() {
           {panels.map((panel, idx) => (
             <div key={panel.id} className="prompt-card card">
               <div className="flex items-center justify-between mb-sm">
-                <span className="badge">Panel {idx + 1}</span>
+                <span className="badge">{ui("Panel")} {idx + 1}</span>
                 <button
                   className="btn btn-ghost text-sm"
                   onClick={() => setSelectedPanelId(panel.id)}
@@ -619,18 +620,18 @@ export function PromptLabTab() {
               </div>
             )}
             <div style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.6, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <span>{t.prompt.importHint || 'JSON array. Fields: panel, positive (required), negative, seed'}</span>
+              <span>{t.prompt.importHint || ui("JSON array. Fields: panel, positive (required), negative, seed")}</span>
               <button
                 className="btn btn-ghost"
                 onClick={handleCopyExample}
                 style={{ fontSize: '11px', padding: '2px 8px', whiteSpace: 'nowrap', marginLeft: '12px' }}
               >
-                {importCopied ? <><FiCheck size={12} /> Copied</> : <><FiCopy size={12} /> Copy Example</>}
+                {importCopied ? <><FiCheck size={12} /> {ui("Copied")}</> : <><FiCopy size={12} /> {ui("Copy Example")}</>}
               </button>
             </div>
             <div className="flex gap-sm" style={{ justifyContent: 'flex-end' }}>
               <button className="btn btn-secondary" onClick={() => { setImportModalOpen(false); setImportJson(''); setImportError(''); }}>
-                Cancel
+                {ui("Cancel")}
               </button>
               <button className="btn btn-primary" onClick={handleImport} disabled={!importJson.trim()}>
                 {t.prompt.importButton || 'Import Panels'}

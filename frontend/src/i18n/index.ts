@@ -1,4 +1,7 @@
+import { vi } from './vi';
+
 export const translations = {
+  vi,
   en: {
     tabs: {
       storyboard: 'Storyboard',
@@ -471,5 +474,5 @@ export const translations = {
   },
 };
 
-export type Language = 'en' | 'zh';
+export type Language = 'en' | 'zh' | 'vi';
 export type TranslationKeys = typeof translations.en;

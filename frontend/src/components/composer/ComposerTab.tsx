@@ -1,3 +1,4 @@
+import { ui } from '../../i18n/ui';
 import { useState, useEffect, useRef } from 'react';
 import {
   FiMousePointer, FiType, FiMessageCircle,
@@ -270,7 +271,7 @@ export function ComposerTab() {
       if (data.success) {
         setCurrentProjectId(data.project.id);
         setCurrentProjectName(data.project.name);
-        setSaveMsg(t.composer.savedSuccess || 'Saved!');
+        setSaveMsg(t.composer.savedSuccess || ui("Saved!"));
         setShowSaveModal(false);
         setSaveProjectName('');
         setTimeout(() => setSaveMsg(''), 2500);
@@ -459,7 +460,7 @@ export function ComposerTab() {
         a.download = '';
         a.click();
       } else if (data.success) {
-        alert(`${type.toUpperCase()} exported successfully!`);
+        alert(ui('{format} exported successfully!', {format: type.toUpperCase()}));
       }
     } catch (err) {
       console.error('Export failed:', err);
@@ -578,11 +579,11 @@ export function ComposerTab() {
                   key={bt}
                   className={`composer-bubble-pill ${activeBubbleType === bt ? 'active' : ''}`}
                   onClick={() => setActiveBubbleType(bt)}
-                  title={bt === 'inner-voice' ? t.composer.innerVoice : bt}
+                  title={bt === 'inner-voice' ? t.composer.innerVoice : t.composer[bt]}
                 >
                   <BubbleIcon type={bt} />
                   <span className="composer-bubble-pill-label">
-                    {bt === 'inner-voice' ? t.composer.innerVoice : bt}
+                    {bt === 'inner-voice' ? t.composer.innerVoice : t.composer[bt]}
                   </span>
                 </button>
               ))}
@@ -598,7 +599,7 @@ export function ComposerTab() {
               <optgroup label={t.composer.builtInTemplates || 'Built-in'}>
                 {TEMPLATES.map(tmpl => (
                   <option key={tmpl.id} value={tmpl.id}>
-                    {language === 'zh' ? tmpl.nameZh : tmpl.name}
+                    {language === 'zh' ? tmpl.nameZh : ui(tmpl.name)}
                   </option>
                 ))}
               </optgroup>
@@ -665,7 +666,7 @@ export function ComposerTab() {
             <button
               className="composer-tool-btn composer-save-template-btn"
               title={t.composer.saveTemplate || 'Save current layout as template'}
-              onClick={() => { setTplName(currentPage?.name || 'My Template'); setShowSaveTplModal(true); }}
+              onClick={() => { setTplName(currentPage?.name || ui("My Template")); setShowSaveTplModal(true); }}
             >
               <FiBook size={15} />
               <span className="composer-save-template-label">{t.composer.saveTemplate || 'Save Template'}</span>
@@ -693,7 +694,7 @@ export function ComposerTab() {
                         <span className="composer-template-menu-name">{tpl.name}</span>
                         <button
                           className="composer-template-menu-delete"
-                          title={t.composer.deleteTemplate || 'Delete'}
+                          title={t.composer.deleteTemplate || ui("Delete")}
                           onClick={(e) => handleDeleteUserTemplate(e, tpl.id)}
                         >
                           <FiTrash size={11} />
@@ -719,9 +720,9 @@ export function ComposerTab() {
 
           <div className="composer-toolbar-group">
             <div className="composer-zoom-controls">
-              <button onClick={() => setZoom(zoom - 0.1)} title="Zoom out">−</button>
+              <button onClick={() => setZoom(zoom - 0.1)} title={ui("Zoom out")}>−</button>
               <span>{Math.round(zoom * 100)}%</span>
-              <button onClick={() => setZoom(zoom + 0.1)} title="Zoom in">+</button>
+              <button onClick={() => setZoom(zoom + 0.1)} title={ui("Zoom in")}>+</button>
             </div>
           </div>
 
@@ -742,11 +743,11 @@ export function ComposerTab() {
           <div className="composer-toolbar-group">
             <button
               className="composer-tool-btn"
-              title="Save to Showcase"
+              title={ui("Save to Showcase")}
               onClick={() => {
                 if (currentProjectId) {
                   autoSave();
-                  setSaveMsg(t.composer.savedSuccess || 'Saved!');
+                  setSaveMsg(t.composer.savedSuccess || ui("Saved!"));
                   setTimeout(() => setSaveMsg(''), 2500);
                 } else {
                   setShowSaveModal(true);
@@ -757,7 +758,7 @@ export function ComposerTab() {
             </button>
             <button
               className="composer-tool-btn"
-              title="Save Draft (local)"
+              title={ui("Save Draft (local)")}
               onClick={saveDraft}
             >
               <FiBook size={15} />
@@ -773,13 +774,13 @@ export function ComposerTab() {
               {showExportMenu && (
                 <div className="composer-export-menu">
                   <button onClick={() => { handleExport('png'); setShowExportMenu(false); }}>
-                    Download PNG (current page)
+                    {ui("Download PNG (current page)")}
                   </button>
                   <button onClick={() => { handleExport('pdf'); setShowExportMenu(false); }}>
-                    Export as PDF
+                    {ui("Export as PDF")}
                   </button>
                   <button onClick={() => { handleExport('zip'); setShowExportMenu(false); }}>
-                    Export as ZIP
+                    {ui("Export as ZIP")}
                   </button>
                 </div>
               )}
@@ -792,13 +793,13 @@ export function ComposerTab() {
             <span className="composer-canvas-hint-dot" />
             <span>
               {activeTool === 'text'
-                ? 'Click anywhere on the canvas to place a text box. Then double-click it to edit.'
-                : 'Click anywhere on the canvas to place a bubble. Then double-click it to type.'}
+                ? ui("Click anywhere on the canvas to place a text box. Then double-click it to edit.")
+                : ui("Click anywhere on the canvas to place a bubble. Then double-click it to type.")}
             </span>
             <button
               className="composer-canvas-hint-cancel"
               onClick={() => setActiveTool('select')}
-              title="Cancel (Switch to Select tool)"
+              title={ui("Cancel (Switch to Select tool)")}
             >
               <FiX size={12} />
             </button>
@@ -814,14 +815,14 @@ export function ComposerTab() {
         <div className="composer-image-picker-overlay" onClick={() => setShowSaveModal(false)}>
           <div className="composer-image-picker" onClick={e => e.stopPropagation()} style={{ width: 360 }}>
             <div className="composer-image-picker-header">
-              <h3>Save to Showcase</h3>
+              <h3>{ui("Save to Showcase")}</h3>
               <button className="composer-tool-btn" onClick={() => setShowSaveModal(false)}>
                 <FiX size={16} />
               </button>
             </div>
             <div style={{ padding: 'var(--space-md)' }}>
               <label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>
-                Project Name
+                {ui("Project Name")}
               </label>
               <input
                 className="input"
@@ -829,11 +830,11 @@ export function ComposerTab() {
                 value={saveProjectName}
                 onChange={e => setSaveProjectName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && saveToShowcase()}
-                placeholder="My Manga Chapter 1"
+                placeholder={ui("My Manga Chapter 1")}
               />
               <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
                 <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => setShowSaveModal(false)}>
-                  Cancel
+                  {ui("Cancel")}
                 </button>
                 <button
                   className="btn btn-primary"
@@ -841,7 +842,7 @@ export function ComposerTab() {
                   disabled={!saveProjectName.trim()}
                   onClick={saveToShowcase}
                 >
-                  Save
+                  {ui("Save")}
                 </button>
               </div>
             </div>
@@ -871,11 +872,11 @@ export function ComposerTab() {
                 value={tplName}
                 onChange={e => setTplName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSaveTemplate()}
-                placeholder="My Manga Layout"
+                placeholder={ui("My Manga Layout")}
               />
               <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
                 <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => setShowSaveTplModal(false)}>
-                  {t.composer.cancel || 'Cancel'}
+                  {t.composer.cancel || ui("Cancel")}
                 </button>
                 <button
                   className="btn btn-primary"
@@ -883,7 +884,7 @@ export function ComposerTab() {
                   disabled={!tplName.trim()}
                   onClick={handleSaveTemplate}
                 >
-                  {t.composer.save || 'Save'}
+                  {t.composer.save || ui("Save")}
                 </button>
               </div>
             </div>

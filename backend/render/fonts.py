@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 from typing import Optional
 from PIL import ImageFont
-from ..core.config import DATA_DIR
+from ..core.config import DATA_DIR, settings
 
 _USER_FONT_DIR = DATA_DIR / "fonts"
 
@@ -63,6 +63,15 @@ def _find_font(family: Optional[str], bold: bool = False) -> Optional[str]:
                 if not bold or "bold" in os.path.basename(p).lower() or "hei" in p:
                     return p
     fallbacks = _BOLD_FALLBACKS + _FALLBACKS if bold else _FALLBACKS
+    # The Windows CJK fonts above can lack Vietnamese precomposed glyphs.
+    # Prefer Arial for the Vietnamese UI/export locale, while retaining the
+    # original CJK resolution order for Chinese and explicit font families.
+    if settings.language == "vi" and not family:
+        latin = (["C:/Windows/Fonts/arialbd.ttf"] if bold else []) + [
+            "C:/Windows/Fonts/arial.ttf",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        ]
+        fallbacks = latin + fallbacks
     for p in fallbacks:
         if os.path.exists(p):
             return p

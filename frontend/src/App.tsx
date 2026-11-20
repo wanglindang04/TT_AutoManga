@@ -23,11 +23,16 @@ function App() {
           api: data.api,
           swarmui: data.swarmui,
           defaults: data.defaults,
-          language: data.language || 'en',
+          language: data.language || 'vi',
         });
       })
       .catch(console.error);
   }, [setSettings]);
+
+  const language = useProjectStore((state) => state.settings.language);
+  useEffect(() => {
+    document.documentElement.lang = language || 'vi';
+  }, [language]);
 
   const renderTab = () => {
     switch (activeTab) {
